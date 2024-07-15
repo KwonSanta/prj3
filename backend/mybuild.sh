@@ -27,3 +27,5 @@ ssh -i src/main/resources/secret/EC2_keyfile.pem ubuntu@43.201.65.136 'docker rm
 ssh -i src/main/resources/secret/EC2_keyfile.pem ubuntu@43.201.65.136 'docker pull kwonsanta/spacehub'
 # 컨테이너 실행
 ssh -i src/main/resources/secret/EC2_keyfile.pem ubuntu@43.201.65.136 'docker run -d -p 8080:8080 --restart always --name spacehub kwonsanta/spacehub'
+# 필요없는 이미지 삭제
+ssh -i src/main/resources/secret/EC2_keyfile.pem ubuntu@43.201.65.136 'docker image prune -f'

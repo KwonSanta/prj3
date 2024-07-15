@@ -1,30 +1,32 @@
 import {
   Box,
-  Text,
   Button,
+  Divider,
   FormControl,
   FormHelperText,
   FormLabel,
+  Heading,
   Input,
   InputGroup,
+  InputLeftElement,
   InputRightElement,
-  Select,
-  useToast, VStack, Heading, Divider, InputLeftElement,
+  useToast,
+  VStack,
 } from "@chakra-ui/react";
-import React, {useState} from "react";
+import React, { useState } from "react";
 import axios from "axios";
-import {useNavigate} from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import TimerComponent from "./TimerComponent.jsx";
 import NaverLogin from "./NaverLogin.jsx";
-import {FiMail, FiLock, FiUser, FiSmartphone} from "react-icons/fi";
+import { FiLock, FiMail, FiSmartphone, FiUser } from "react-icons/fi";
 
 export function MemberSignup() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [nickname, setNickname] = useState("");
   const [passwordCheck, setPasswordCheck] = useState("");
-  const [mobile, setMobile] = useState()
-  const [signUp, setSignUp] = useState(false)
+  const [mobile, setMobile] = useState();
+  const [signUp, setSignUp] = useState(false);
 
   const [isLoading, setIsLoading] = useState(false);
   const [isCheckedEmail, setIsCheckedEmail] = useState(false);
@@ -42,7 +44,6 @@ export function MemberSignup() {
   const toast = useToast();
   const navigate = useNavigate();
 
-
   const handleCapsLockWarning = (e) => {
     const isCapsLockOn = e.getModifierState("CapsLock");
     setCapsLockWarning(isCapsLockOn);
@@ -51,14 +52,12 @@ export function MemberSignup() {
   function handleSignup() {
     setIsLoading(true);
     axios
-      .post("/api/member/signup",
-        {
-          email: email,
-          password: password,
-          nickname: nickname,
-          mobile: mobile
-        }
-      )
+      .post("/api/member/signup", {
+        email: email,
+        password: password,
+        nickname: nickname,
+        mobile: mobile,
+      })
       .then((res) => {
         toast({
           status: "success",
@@ -157,13 +156,13 @@ export function MemberSignup() {
     isDisabled = true;
   }
 
-  if (isSmsCodeSent) {
-    isDisabled = true;
-  }
+  // if (isSmsCodeSent) {
+  //   isDisabled = true;
+  // }
 
-  if (!signUp) {
-    isDisabled = true;
-  }
+  // if (!signUp) {
+  //   isDisabled = true;
+  // }
 
   const sendNumber = () => {
     console.log("email", email);
@@ -192,7 +191,6 @@ export function MemberSignup() {
   };
 
   const sendNumberMobile = () => {
-
     axios
       .get(`/api/member/p1?mobile=${mobile}`)
       .then((response) => {
@@ -200,13 +198,11 @@ export function MemberSignup() {
         setVerificationCode(response.data.verificationCode);
         setExpirationTime(response.data.expirationTime);
         setIsSmsCodeSent(true);
-
       })
       .catch((error) => {
         console.error("Error sending verification code:", error);
       });
   };
-
 
   const confirmNumberMobile = () => {
     if (inputCode == verificationCode) {
@@ -218,16 +214,13 @@ export function MemberSignup() {
       axios.post("/api/member/phone", {
         memberId: account.id,
         mobile: mobile,
-
       });
 
       window.location.reload();
-
     } else {
       alert("인증에 실패했습니다");
     }
   };
-
 
   return (
     <Box
@@ -257,7 +250,6 @@ export function MemberSignup() {
               bgClip="text"
               fontWeight="extrabold"
               color="black"
-
             >
               회원가입
             </Heading>
@@ -266,7 +258,7 @@ export function MemberSignup() {
               <FormLabel>이메일</FormLabel>
               <InputGroup>
                 <InputLeftElement pointerEvents="none">
-                  <FiMail color="gray.300"/>
+                  <FiMail color="gray.300" />
                 </InputLeftElement>
                 <Input
                   type="email"
@@ -283,7 +275,11 @@ export function MemberSignup() {
                     h="1.75rem"
                     size="sm"
                     colorScheme="purple"
-                    isDisabled={!isValidEmail || email.trim().length === 0 || isCheckedEmail}
+                    isDisabled={
+                      !isValidEmail ||
+                      email.trim().length === 0 ||
+                      isCheckedEmail
+                    }
                     onClick={handleCheckEmail}
                   >
                     중복확인
@@ -291,24 +287,26 @@ export function MemberSignup() {
                 </InputRightElement>
               </InputGroup>
               {!isCheckedEmail && (
-                <FormHelperText color="red.500">유효한 이메일을 입력해주세요</FormHelperText>
+                <FormHelperText color="red.500">
+                  유효한 이메일을 입력해주세요
+                </FormHelperText>
               )}
             </FormControl>
 
             {isCheckedEmail && (
               <Button
-                leftIcon={<FiMail/>}
+                leftIcon={<FiMail />}
                 colorScheme="purple"
                 onClick={sendNumber}
                 isFullWidth
                 isDisabled={isCodeSentEmail}
               >
                 이메일 인증코드 받기
-              </Button>)}
+              </Button>
+            )}
 
             {isCodeSent && (
-              <Box
-              >
+              <Box>
                 <VStack spacing={4}>
                   <InputGroup>
                     <Input
@@ -321,7 +319,9 @@ export function MemberSignup() {
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  {expirationTime && <TimerComponent expirationTime={expirationTime}/>}
+                  {expirationTime && (
+                    <TimerComponent expirationTime={expirationTime} />
+                  )}
                 </VStack>
               </Box>
             )}
@@ -330,7 +330,7 @@ export function MemberSignup() {
               <FormLabel>전화번호</FormLabel>
               <InputGroup>
                 <InputLeftElement pointerEvents="none">
-                  <FiSmartphone color="gray.300"/>
+                  <FiSmartphone color="gray.300" />
                 </InputLeftElement>
                 <Input
                   placeholder="01012345678"
@@ -344,7 +344,7 @@ export function MemberSignup() {
             </FormControl>
 
             <Button
-              leftIcon={<FiSmartphone/>}
+              leftIcon={<FiSmartphone />}
               colorScheme="purple"
               onClick={sendNumberMobile}
               isFullWidth
@@ -362,12 +362,18 @@ export function MemberSignup() {
                       onChange={(e) => setInputCode(e.target.value)}
                     />
                     <InputRightElement width="4.5rem">
-                      <Button h="1.75rem" size="sm" onClick={confirmNumberMobile}>
+                      <Button
+                        h="1.75rem"
+                        size="sm"
+                        onClick={confirmNumberMobile}
+                      >
                         확인
                       </Button>
                     </InputRightElement>
                   </InputGroup>
-                  {expirationTime && <TimerComponent expirationTime={expirationTime}/>}
+                  {expirationTime && (
+                    <TimerComponent expirationTime={expirationTime} />
+                  )}
                 </VStack>
               </Box>
             )}
@@ -376,7 +382,7 @@ export function MemberSignup() {
               <FormLabel>비밀번호</FormLabel>
               <InputGroup>
                 <InputLeftElement pointerEvents="none">
-                  <FiLock color="gray.300"/>
+                  <FiLock color="gray.300" />
                 </InputLeftElement>
                 <Input
                   type="password"
@@ -386,7 +392,9 @@ export function MemberSignup() {
                 />
               </InputGroup>
               {capsLockWarning && (
-                <FormHelperText color="red.500">Caps Lock이 켜져있습니다.</FormHelperText>
+                <FormHelperText color="red.500">
+                  Caps Lock이 켜져있습니다.
+                </FormHelperText>
               )}
             </FormControl>
 
@@ -394,7 +402,7 @@ export function MemberSignup() {
               <FormLabel>비밀번호 확인</FormLabel>
               <InputGroup>
                 <InputLeftElement pointerEvents="none">
-                  <FiLock color="gray.300"/>
+                  <FiLock color="gray.300" />
                 </InputLeftElement>
                 <Input
                   type="password"
@@ -403,7 +411,9 @@ export function MemberSignup() {
                 />
               </InputGroup>
               {password !== passwordCheck && (
-                <FormHelperText color="red.500">Passwords do not match</FormHelperText>
+                <FormHelperText color="red.500">
+                  Passwords do not match
+                </FormHelperText>
               )}
             </FormControl>
 
@@ -411,7 +421,7 @@ export function MemberSignup() {
               <FormLabel>닉네임</FormLabel>
               <InputGroup>
                 <InputLeftElement pointerEvents="none">
-                  <FiUser color="gray.300"/>
+                  <FiUser color="gray.300" />
                 </InputLeftElement>
                 <Input
                   bg="white"
@@ -433,7 +443,9 @@ export function MemberSignup() {
                 </InputRightElement>
               </InputGroup>
               {!isCheckedNickName && (
-                <FormHelperText color="red.500">닉네임 중복 확인을 해주세요</FormHelperText>
+                <FormHelperText color="red.500">
+                  닉네임 중복 확인을 해주세요
+                </FormHelperText>
               )}
             </FormControl>
 
@@ -452,10 +464,10 @@ export function MemberSignup() {
               회원가입
             </Button>
 
-            <Divider/>
+            <Divider />
 
             <Box>
-              <NaverLogin/>
+              <NaverLogin />
             </Box>
           </VStack>
         </Box>
